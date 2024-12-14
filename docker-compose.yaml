@@ -1,0 +1,53 @@
+services:
+
+  sems-base:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sems-base
+    hostname: sems-base
+    platform: linux/amd64
+
+  sems-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sems-builder
+    hostname: sems-builder
+    platform: linux/amd64
+
+  sems:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_WORKDIR: ${BASE_WORKDIR:-/}
+        GIT_SEMS_PROJECT_URL: ${GIT_SEMS_PROJECT_URL:-https://github.com/bundasmanu/sems.git}
+        GIT_SEMS_PROJECT_BRANCH: ${GIT_SEMS_PROJECT_BRANCH:-master}
+    container_name: sems
+    hostname: sems
+    environment:
+      - BASE_WORKDIR=${BASE_WORKDIR:-/}
+      - PKG_DEBS_FOLDER=${PKG_DEBS_FOLDER:-/deb_pkg}
+      - CONFIGS_ROOT_FOLDER=${CONFIGS_ROOT_FOLDER:-/sems-config}
+    volumes:
+      - ./deb_pkg:${PKG_DEBS_FOLDER}
+      - ./config:${CONFIGS_ROOT_FOLDER}
+      - ./plugins-conf:${PLUGINS_CONF_FOLDER}
+    ports:
+      - "5070:5070"
+      - "5080:5080"
+    networks:
+      common-network:
+        ipv4_address: 172.25.0.10
+    cap_add:
+      - NET_ADMIN
+      - SYS_TIME
+      - SYS_NICE
+    tty: true
+    privileged: true
+    platform: linux/amd64
+
+networks:
+  common-network:
+    external: true
