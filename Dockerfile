@@ -36,6 +36,9 @@ FROM sems-builder AS sems
 
 WORKDIR ${BASE_WORKDIR}
 
+RUN cd .. && dpkg -i sems_*.deb && \
+    dpkg -i libsems1-dev*.deb
+
 COPY entrypoint.sh .
 
 ENTRYPOINT ["./entrypoint.sh"]
