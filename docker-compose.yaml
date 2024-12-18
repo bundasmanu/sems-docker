@@ -21,19 +21,21 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        BASE_WORKDIR: ${BASE_WORKDIR:-/}
+        BASE_WORKDIR: ${BASE_WORKDIR:-/sems}
         GIT_SEMS_PROJECT_URL: ${GIT_SEMS_PROJECT_URL:-https://github.com/bundasmanu/sems.git}
         GIT_SEMS_PROJECT_BRANCH: ${GIT_SEMS_PROJECT_BRANCH:-master}
     container_name: sems
     hostname: sems
     environment:
-      - BASE_WORKDIR=${BASE_WORKDIR:-/}
+      - BASE_WORKDIR=${BASE_WORKDIR:-/sems}
       - PKG_DEBS_FOLDER=${PKG_DEBS_FOLDER:-/deb_pkg}
       - CONFIGS_ROOT_FOLDER=${CONFIGS_ROOT_FOLDER:-/sems-config}
+      - PLUGINS_CONF_FOLDER=${PLUGINS_CONF_FOLDER:-/etc/sems/etc}
+      - TMP_CONF_FOLDER=${TMP_CONF_FOLDER:-/tmp/sems}
     volumes:
       - ./deb_pkg:${PKG_DEBS_FOLDER}
       - ./config:${CONFIGS_ROOT_FOLDER}
-      - ./plugins-conf:${PLUGINS_CONF_FOLDER}
+      - ./plugins-conf:${TMP_CONF_FOLDER}
     ports:
       - "5070:5070"
       - "5080:5080"
