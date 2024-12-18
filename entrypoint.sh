@@ -10,9 +10,8 @@ copy_deb_pkgs() {
         ${PKG_DEBS_FOLDER}
 }
 
-install_sems (){
-    dpkg -i ${PKG_DEBS_FOLDER}/sems_*.deb && \
-    dpkg -i ${PKG_DEBS_FOLDER}/libsems1-dev*.deb
+copy_plugin_configs (){
+    cp -rp ${TMP_CONF_FOLDER}/* ${PLUGINS_CONF_FOLDER}
 }
 
 run_sems () {
@@ -25,7 +24,7 @@ case "$1" in
         ;;
     start)
         copy_deb_pkgs
-        install_sems
+        copy_plugin_configs
         run_sems
         ;;
     *)
